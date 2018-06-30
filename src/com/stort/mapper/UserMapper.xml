@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stort.dao.UserMapper">
+	<resultMap type="com.stort.bean.User" id="BaseResultMap">
+		<id column="ID" jdbcType="INTEGER" property="ID"/>
+		<result column="username" jdbcType="VARCHAR" property="username"/>
+		<result column="password" jdbcType="VARCHAR" property="password"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, username, password
+	</sql>
+	<sql id="Base_Column_username">
+		username
+	</sql>
+	<sql id="Base_Column_ID">
+		ID
+	</sql>
+	<select id="LoginByUserName" parameterType="com.stort.bean.User" resultMap="BaseResultMap">
+		select
+		 <include refid="Base_Column_List" />
+		from buyer
+		<where>
+			<if test="username != null and username !=''">
+				and username=#{username, jdbcType=VARCHAR}
+			</if>
+			<if test="password != null and password !=''">
+				and password=#{password,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="LoginByID" parameterType="com.stort.bean.User" resultMap="BaseResultMap">
+		select
+		 <include refid="Base_Column_List" />
+		from seller
+		<where>
+		<if test="ID != null and ID !=''">
+				and ID=#{ID, jdbcType=INTEGER}
+			</if>
+			<if test="password != null and password !=''">
+				and password=#{password,jdbcType=VARCHAR}
+			</if>
+			</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stort.dao.ShopBusMapper">
+	<resultMap type="com.stort.bean.ShopBus" id="BaseResultMap">
+		<id column="ID" jdbcType="INTEGER" property="ID"/>
+		<id column="number" jdbcType="INTEGER" property="number"/>
+		<result column="total" jdbcType="INTEGER" property="total"/>
+		<association property="commodit" javaType="com.stort.bean.Commodit">
+			<id column="number" jdbcType="INTEGER" property="number" />
+    		<result column="name" jdbcType="VARCHAR" property="name" />
+    		<result column="date" jdbcType="VARCHAR" property="date" />
+   			<result column="price" jdbcType="DOUBLE" property="price" />
+    		<result column="shopnum" jdbcType="INTEGER" property="shopnum" />
+    		<result column="photo" jdbcType="VARCHAR" property="photo" />
+    		<result column="intro" jdbcType="VARCHAR" property="intro" />
+		</association>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		s.ID, s.number,s.total, c.name, c.date, c.price, c.shopnum, c.photo, c.intro
+	</sql>
+	<select id="selectByPrimaryKeyWithCommodit" parameterType="INTEGER" resultMap="BaseResultMap">
+		select
+		 <include refid="Base_Column_List" />
+		from shopbus s
+		right join commodit c on s.number=c.number
+		where s.ID=#{ID,jdbcType=INTEGER}
+	</select>
+	<select id="selectTotal" parameterType="INTEGER" resultType="java.lang.String">
+		select total
+		from shopbus
+		<where>
+			<if test="ID!=null">
+				and ID=#{ID,jdbcType=INTEGER}
+			</if>
+			<if test="number!=null">
+				and number=#{number, jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+	<insert id="addCommodit">
+		insert into shopbus
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ID != null">
+        ID,
+      </if>
+      <if test="number != null">
+        number,
+      </if>
+      <if test="total != null">
+        total,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ID != null">
+        #{ID,jdbcType=INTEGER},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="total != null">
+        #{total,jdbcType=INTEGER},
+      </if>
+    </trim>
+	</insert>
+	<update id="updateCommodit" parameterType="INTEGER">
+		update shopbus
+		set total=#{total, jdbcType=INTEGER}
+		<where>
+			<if test="ID!=null">
+				and ID=#{ID,jdbcType=INTEGER}
+			</if>
+			<if test="number!=null">
+				and number=#{number, jdbcType=INTEGER}
+			</if>
+		</where> 
+	</update>
+	<delete id="delCommodit" parameterType="INTEGER">
+		delete from shopbus
+		<where>
+			<if test="ID!=null">
+				and ID=#{ID,jdbcType=INTEGER}
+			</if>
+			<if test="number!=null">
+				and number=#{number, jdbcType=INTEGER}
+			</if>
+		</where>
+	</delete>
+</mapper>
